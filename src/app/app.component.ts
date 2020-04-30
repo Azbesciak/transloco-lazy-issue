@@ -3,7 +3,7 @@ import {CFG_TOKEN, DynamicConfig} from './dynamic-config';
 import {ModuleLoaderService} from './module-loader.service';
 
 const moduleLoad = {
-  loadChildren: () => import('./i18n-lazy.module').then(m => m.I18nLazyModule)
+  loadChildren: () => import('./dynamic.module').then(m => m.DynamicModule)
 };
 
 @Component({
@@ -13,8 +13,6 @@ const moduleLoad = {
   providers: [ModuleLoaderService]
 })
 export class AppComponent {
-  title = 'transloco-lazy-issue';
-
   constructor(private loader: ModuleLoaderService, private injector: Injector) {
   }
 
@@ -28,10 +26,14 @@ export class AppComponent {
   };
 
   create() {
-    this.loader.provideModule(moduleLoad, Injector.create([{
-      provide: CFG_TOKEN,
-      useValue: this.cfg,
-      deps: []
-    }], this.injector));
+    this.loader.provideModule(moduleLoad, Injector.create({
+      parent: this.injector,
+      name: 'xyz',
+      providers: [{
+        provide: CFG_TOKEN,
+        useValue: this.cfg,
+        deps: []
+      }]
+    }));
   }
 }
