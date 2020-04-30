@@ -72,6 +72,9 @@ export class NoOpTranslocoTranslationInterceptor implements TranslocoInterceptor
 
 export function translocoFactor(other: TranslocoService, ...services: any[]) {
   console.log('SERVICE', other);
+  if (other) {
+    return other;
+  }
   // @ts-ignore
   return new TranslocoService(...services);
 }
